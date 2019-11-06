@@ -1,0 +1,13 @@
+version: "3"
+services:
+  coder:
+    image: tsangpo/coder
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        pull: 1
+    environment:
+      PASSWORD: pass1234
+    ports:
+      - "8022:22"
