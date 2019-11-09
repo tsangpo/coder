@@ -9,10 +9,10 @@ ARG USER_GID=$USER_UID
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
-    RUST_VERSION=1.38.0
+    RUST_VERSION=1.39.0
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends apt-utils software-properties-common 2>&1 \
+    && apt-get install -y --no-install-recommends apt-utils apt-transport-https software-properties-common 2>&1 \
     #
     # Verify git, process tools, lsb-release (common in install instructions for CLIs) installed
     && apt-get install -y zsh curl wget unzip git iproute2 procps lsb-release \
@@ -23,6 +23,11 @@ RUN apt-get update \
     #
     # Install Python
     # && apt-get install python3.8 \
+    # Install Dart
+    && sh -c 'curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -' \
+    && sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list' \
+    && apt-get update \
+    && apt-get install dart \
     # Install Java
     && apt-get install -y openjdk-13-jdk \
     # Install Rust
@@ -39,8 +44,6 @@ RUN apt-get update \
     && wget -q https://packages.microsoft.com/config/ubuntu/19.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
     && apt-get update \
-    && apt-get install -y apt-transport-https \
-    && apt-get update \
     && apt-get install -y dotnet-sdk-3.0 \
     # Install node
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
@@ -55,6 +58,7 @@ RUN apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
     && chmod 0440 /etc/sudoers.d/$USERNAME \
+    && runuser -l coder -c 'sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"' \
     ###################
     && apt-get -y install openssh-server rsync \
     && mkdir -p /var/run/sshd \
