@@ -12,7 +12,7 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     RUST_VERSION=1.39.0
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends apt-utils apt-transport-https software-properties-common 2>&1 \
+    && apt-get install -y --no-install-recommends apt-utils apt-transport-https software-properties-common gpg-agent 2>&1 \
     #
     # Verify git, process tools, lsb-release (common in install instructions for CLIs) installed
     && apt-get install -y zsh curl wget unzip git iproute2 procps lsb-release \
@@ -24,8 +24,8 @@ RUN apt-get update \
     # Install Python
     # && apt-get install python3.8 \
     # Install Dart
-    && sh -c 'curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -' \
-    && sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list' \
+    && curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list \
     && apt-get update \
     && apt-get install dart \
     # Install Java
