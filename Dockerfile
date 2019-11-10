@@ -58,7 +58,6 @@ RUN apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
     && chmod 0440 /etc/sudoers.d/$USERNAME \
-    && runuser -l coder -c 'sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"' \
     ###################
     && apt-get -y install openssh-server rsync \
     && mkdir -p /var/run/sshd \
@@ -71,7 +70,9 @@ RUN apt-get update \
 
 
 COPY entrypoint /
+COPY oh-my-zsh.install.sh /
 COPY rust-bin-path.sh /etc/profile.d/
+COPY dart-bin-path.sh /etc/profile.d/
 RUN chmod a+x /entrypoint
 
 
